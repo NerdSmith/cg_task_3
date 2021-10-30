@@ -1,7 +1,9 @@
 package ru.vsu.cs.tree;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static ru.vsu.cs.util.StringUtils.checkBrackets;
+import static ru.vsu.cs.util.StringUtils.removeWhitespaces;
 
 public class ExpressionTree {
     private final List<Character> SUM_SIGNS = Arrays.asList('+', '-');
@@ -11,9 +13,21 @@ public class ExpressionTree {
     private Node node;
 
     public ExpressionTree(String expression) throws Exception {
+        expression = removeWhitespaces(expression);
+        boolean isValidBrackets = checkBrackets(expression);
+        if (!isValidBrackets) {
+            throw new Exception("Brackets is invalid");
+        }
         this.node = sum(expression);
     }
 
+    public double compute() throws Exception {
+        return node.compute(new HashMap<>());
+    }
+
+    public double compute(Map<Character, Double> vars) throws Exception {
+        return node.compute(vars);
+    }
 
     private Node sum(String expression) throws Exception {
         Node node;
@@ -48,6 +62,7 @@ public class ExpressionTree {
     }
 
     private Node element(String expression) throws Exception {
+        // exponentiation block
         Node node;
         int idx = findNextOperation(expression, EXPONENTIATION_SIGNS);
         if (idx != -1) {
@@ -57,29 +72,31 @@ public class ExpressionTree {
 
             node = new Node(NodeType.OPERATION, leftNode, rightNode, value);
         }
+        // brackets block
         else if (expression.charAt(0) == '(' && expression.charAt(expression.length() - 1) == ')') {
             String newExpression = expression.substring(1, expression.length() - 1);
             node = sum(newExpression);
         }
+        // parsing numeric element
         else if (isNumeric(expression)) {
             node = new Node(NodeType.NUMBER, null, null, expression);
         }
-        else if (Character.isLetter(expression.charAt(0))){
-            node = new Node(NodeType.VARIABLE, null, null, expression);
+        // parsing variable and constant element
+        else if (Character.isLetter(expression.charAt(0))) {
+            // 4 constant
+            if (Character.isUpperCase(expression.charAt(0))) {
+                node = new Node(NodeType.CONSTANT, null, null, expression);
+            }
+            // 4 var
+            else {
+                node = new Node(NodeType.VARIABLE, null, null, expression);
+            }
         }
+        // error case
         else {
             throw new Exception("Can't parse element expression");
         }
         return node;
-    }
-
-    private boolean isNumeric(String expression) {
-        try {
-            double d = Double.parseDouble(expression);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
     }
 
     private int findNextOperation(String expression, List<Character> operations) {
@@ -103,9 +120,22 @@ public class ExpressionTree {
         return foundIdx;
     }
 
+    private boolean isNumeric(String expression) {
+        try {
+            double d = Double.parseDouble(expression);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) throws Exception {
-        String s = "X^(2+3)+2";
+        String s = "2^x";
         ExpressionTree n = new ExpressionTree(s);
-        System.out.println('a');
+
+        Map<Character, Double> vars = new HashMap<>();
+        vars.put('x', 2.0);
+
+        System.out.println(n.compute(vars));
     }
 }
