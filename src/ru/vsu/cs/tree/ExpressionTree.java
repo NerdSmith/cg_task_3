@@ -130,7 +130,7 @@ public class ExpressionTree {
     }
 
     public static void main(String[] args) throws Exception {
-        String s = "2^x";
+        String s = "2^x+4-3*(2+4)";
         ExpressionTree n = new ExpressionTree(s);
 
         Map<Character, Double> vars = new HashMap<>();
