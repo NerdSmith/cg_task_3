@@ -13,7 +13,7 @@ public class MainWindow extends JFrame {
     private JPanel inputPanel;
     private JLabel inputLabel;
     private JTextField inputTextField;
-    private JButton helpBtn;
+    private JButton removeBtn;
     private JButton submitBtn;
 
 
@@ -42,13 +42,14 @@ public class MainWindow extends JFrame {
         this.inputTextField.setFont(new Font("Arial", Font.PLAIN, 20));
         this.inputTextField.setMaximumSize(new Dimension(5000, 60));
 
-        this.helpBtn = new JButton("PLACEHOLDER");
+        this.removeBtn = new JButton("Remove");
+        this.removeBtn.addActionListener(new RemoveBtnListener(drawPanel));
         this.submitBtn = new JButton("Submit");
         this.submitBtn.addActionListener(new SubmitBtnListener(inputTextField, drawPanel));
 
         this.inputPanel.add(this.inputLabel);
         this.inputPanel.add(this.inputTextField);
-        this.inputPanel.add(this.helpBtn);
+        this.inputPanel.add(this.removeBtn);
         this.inputPanel.add(this.submitBtn);
 
         // adding components to main panel
@@ -60,6 +61,19 @@ public class MainWindow extends JFrame {
 
         // setting window visible
         this.setVisible(true);
+    }
+
+    private static class RemoveBtnListener implements ActionListener {
+        private final DrawPanel drawPanel;
+
+        public RemoveBtnListener(DrawPanel drawPanel) {
+            this.drawPanel = drawPanel;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            this.drawPanel.removeDrawingObject();
+        }
     }
 
     private static class SubmitBtnListener implements ActionListener {

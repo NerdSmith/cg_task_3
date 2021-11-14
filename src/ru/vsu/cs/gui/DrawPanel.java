@@ -1,7 +1,9 @@
 package ru.vsu.cs.gui;
 
+import ru.vsu.cs.function_interpreter.util.DrawUtils;
 import ru.vsu.cs.gui.DrawingObject.Drawing;
 import ru.vsu.cs.gui.DrawingObject.Line;
+import ru.vsu.cs.gui.DrawingObject.Text;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +16,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private ScreenConverter screenConverter;
     private Line xAxis;
     private Line yAxis;
+    private Font defaultFont = new Font("TimesRoman", Font.PLAIN, 18);
 
     private ArrayList<Drawing> objectsToDraw = new ArrayList<>();
 
@@ -39,18 +42,26 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         graphics2D.setColor(Color.WHITE);
         graphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        graphics2D.setColor(Color.BLUE);
-        updateAxes();
-        xAxis.draw(graphics2D, screenConverter);
-        yAxis.draw(graphics2D, screenConverter);
-        drawAxisScale(graphics2D);
+        DrawUtils.drawWithColor(graphics2D, Color.BLUE, () -> {
+            updateAxes();
+            xAxis.draw(graphics2D, screenConverter);
+            yAxis.draw(graphics2D, screenConverter);
+            drawAxisScale(graphics2D);
+        });
+
 
         // drawLine(graphics2D, screenConverter, new Line(new RealPoint(0,0), new RealPoint(1, 1)));
 
-        graphics2D.setColor(Color.RED);
-        for (Drawing drawing: objectsToDraw) {
-            drawing.draw(graphics2D, screenConverter);
-        }
+        DrawUtils.drawWithColor(graphics2D, Color.RED, () -> {
+            for (Drawing drawing: objectsToDraw) {
+                drawing.draw(graphics2D, screenConverter);
+            }
+        });
+
+        DrawUtils.drawWithColor(graphics2D, Color.BLUE, () -> {
+            drawAxisScale(graphics2D);
+        });
+
 
 //        for (Line l: allLines) {
 //            drawLine(graphics2D, screenConverter, l);
@@ -141,22 +152,34 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
         double firstLinePointY;
         double secondLinePointY;
+
+        double textXShift;
+        double textYShift;
+
         if (screenConverter.getStartY() > 0) {
             if (screenConverter.getStartY() < screenConverter.getRealHeight()) {
                 firstLinePointY = -0.05;
                 secondLinePointY = 0.05;
+
             }
             else {
                 firstLinePointY = screenConverter.getStartY() - screenConverter.getRealHeight();
                 secondLinePointY = screenConverter.getStartY() - screenConverter.getRealHeight() + 0.2;
+
             }
+            textXShift = 0.04;
+            textYShift = 0.06;
         }
         else {
             firstLinePointY = screenConverter.getStartY();
             secondLinePointY = screenConverter.getStartY() - 0.2;
+
+            textXShift = 0.04;
+            textYShift = -0.1;
         }
         for (int i = leftRealBound; i <= rightRealBound; i++) {
             new Line(new RealPoint(i, firstLinePointY), new RealPoint(i, secondLinePointY)).draw(graphics2D, screenConverter);
+            new Text(Integer.toString(i), this.defaultFont, new RealPoint(i + textXShift, firstLinePointY + textYShift)).draw(graphics2D, screenConverter);
         }
     }
 
@@ -166,7 +189,10 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
         double firstLinePointX;
         double secondLinePointX;
-         System.out.println(screenConverter.getStartX() + " | " + screenConverter.getRealWidth());
+        // System.out.println(screenConverter.getStartX() + " | " + screenConverter.getRealWidth());
+
+        double textXShift;
+        double textYShift;
 
         if (screenConverter.getStartX() < 0) {
             if (screenConverter.getStartX() > -screenConverter.getRealWidth()) {
@@ -177,14 +203,20 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                 firstLinePointX = screenConverter.getStartX() + screenConverter.getRealWidth();
                 secondLinePointX = screenConverter.getStartX() + screenConverter.getRealWidth() - 0.1;
             }
+            textXShift = -0.06;
+            textYShift = 0.01;
         }
         else {
             firstLinePointX = screenConverter.getStartX();
             secondLinePointX = screenConverter.getStartX() + 0.1;
+
+            textXShift = 0.04;
+            textYShift = 0.06;
         }
 
         for (int i = downRealBound; i <= upRealBound; i++) {
             new Line(new RealPoint(firstLinePointX, i), new RealPoint(secondLinePointX, i)).draw(graphics2D, screenConverter);
+            new Text(Integer.toString(i), this.defaultFont, new RealPoint(firstLinePointX + textXShift, i + textYShift)).draw(graphics2D, screenConverter);
         }
     }
 
@@ -193,6 +225,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     public void removeDrawingObject() {
-        objectsToDraw.remove(objectsToDraw.size() - 1);
+        if (!objectsToDraw.isEmpty()) {
+            objectsToDraw.remove(objectsToDraw.size() - 1);
+            this.repaint();
+        }
     }
 }
