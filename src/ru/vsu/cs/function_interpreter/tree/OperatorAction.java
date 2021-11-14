@@ -1,11 +1,13 @@
-package ru.vsu.cs.tree;
+package ru.vsu.cs.function_interpreter.tree;
 
-import ru.vsu.cs.action.*;
+import ru.vsu.cs.function_interpreter.action.*;
 
 import java.util.AbstractMap;
 import java.util.Map;
 
 public class OperatorAction {
+    public static final double ACCURACY = 10000.0;
+    // todo: create a constructor with functions objects
     private static final Map<String, Action> actions = Map.ofEntries(
             new AbstractMap.SimpleEntry<String, Action>("+", new Sum()),
             new AbstractMap.SimpleEntry<String, Action>("-", new Subtract()),
@@ -16,6 +18,14 @@ public class OperatorAction {
     );
 
     public static Double performAnAction(String operator, Double firstOperand, Double secondOperand) {
-        return actions.get(operator).compute(firstOperand, secondOperand);
+        double computeRes = actions.get(operator).compute(firstOperand, secondOperand);
+        double res;
+        if (Double.isFinite(computeRes)) {
+            res = Math.round(computeRes * ACCURACY) / ACCURACY;
+        }
+        else {
+            res = computeRes;
+        }
+        return res;
     }
 }

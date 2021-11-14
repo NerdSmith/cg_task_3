@@ -1,11 +1,11 @@
-package ru.vsu.cs.util;
+package ru.vsu.cs.function_interpreter.util;
 
 public class StringUtils {
     public static String removeWhitespaces(String str) {
         return str.replaceAll("\\s+","");
     }
 
-    public static boolean checkBrackets(String expression) {
+    public static boolean isBracketsBalanced(String expression) {
         char[] chars = expression.toCharArray();
         int counter = 0;
         boolean isRequiringChar = false;

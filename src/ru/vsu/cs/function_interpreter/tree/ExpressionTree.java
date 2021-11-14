@@ -1,9 +1,9 @@
-package ru.vsu.cs.tree;
+package ru.vsu.cs.function_interpreter.tree;
 
 import java.util.*;
 
-import static ru.vsu.cs.util.StringUtils.checkBrackets;
-import static ru.vsu.cs.util.StringUtils.removeWhitespaces;
+import static ru.vsu.cs.function_interpreter.util.StringUtils.isBracketsBalanced;
+import static ru.vsu.cs.function_interpreter.util.StringUtils.removeWhitespaces;
 
 public class ExpressionTree {
     private final List<Character> SUM_SIGNS = Arrays.asList('+', '-');
@@ -14,7 +14,7 @@ public class ExpressionTree {
 
     public ExpressionTree(String expression) throws Exception {
         expression = removeWhitespaces(expression);
-        boolean isValidBrackets = checkBrackets(expression);
+        boolean isValidBrackets = isBracketsBalanced(expression);
         if (!isValidBrackets) {
             throw new Exception("Brackets is invalid");
         }
@@ -113,7 +113,17 @@ public class ExpressionTree {
                 skipCount--;
             }
             // check curr idx
-            if ((skipCount == 0) && (operations.contains(currChar))) {
+            if (
+                    (skipCount == 0) &&
+                    (operations.contains(currChar)) &&
+                    (i - 1 >= 0) &&
+                    (
+                            Character.isDigit(expression.charAt(i - 1)) ||
+                            Character.isLetter(expression.charAt(i - 1)) ||
+                            expression.charAt(i - 1) == '(' ||
+                            expression.charAt(i - 1) == ')'
+                    )
+            ) {
                 return i;
             }
         }
@@ -130,12 +140,11 @@ public class ExpressionTree {
     }
 
     public static void main(String[] args) throws Exception {
-        String s = "2^x+4-3*(2+4)";
+        String s = "1/(x+1/3)";
         ExpressionTree n = new ExpressionTree(s);
+        System.out.println(n.compute(Map.of('x', -33.0/100)));
 
-        Map<Character, Double> vars = new HashMap<>();
-        vars.put('x', 2.0);
+        // System.out.println(Double.isFinite(n.compute()));
 
-        System.out.println(n.compute(vars));
     }
 }

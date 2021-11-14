@@ -1,8 +1,12 @@
 package ru.vsu.cs;
 
+import ru.vsu.cs.gui.MainWindow;
+
+import javax.swing.*;
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("hello");
+        SwingUtilities.invokeLater(MainWindow::new);
     }
 }

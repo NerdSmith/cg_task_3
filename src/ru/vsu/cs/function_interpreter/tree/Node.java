@@ -1,4 +1,4 @@
-package ru.vsu.cs.tree;
+package ru.vsu.cs.function_interpreter.tree;
 
 
 import java.util.Map;
