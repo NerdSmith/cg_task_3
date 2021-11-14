@@ -43,6 +43,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         updateAxes();
         xAxis.draw(graphics2D, screenConverter);
         yAxis.draw(graphics2D, screenConverter);
+        drawAxisScale(graphics2D);
 
         // drawLine(graphics2D, screenConverter, new Line(new RealPoint(0,0), new RealPoint(1, 1)));
 
@@ -127,6 +128,33 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
         yAxis.setP1(new RealPoint(0, screenConverter.getStartY() - screenConverter.getRealHeight()));
         yAxis.setP2(new RealPoint(0, screenConverter.getStartY()));
+    }
+
+    private void drawAxisScale(Graphics2D graphics2D) {
+        drawAxisScaleX(graphics2D);
+        drawAxisScaleY(graphics2D);
+    }
+
+    private void drawAxisScaleX(Graphics2D graphics2D) {
+        int leftRealBound = (int) screenConverter.getStartX();
+        int rightRealBound = (int) Math.ceil(screenConverter.getStartX() + screenConverter.getRealWidth());
+
+        if (screenConverter.getStartY() > 0 && screenConverter.getStartY() < screenConverter.getRealHeight()) {
+            for (int i = leftRealBound; i <= rightRealBound; i++) {
+                new Line(new RealPoint(i, -0.05), new RealPoint(i, 0.05)).draw(graphics2D, screenConverter);
+            }
+        }
+    }
+
+    private void drawAxisScaleY(Graphics2D graphics2D) {
+        int upRealBound = (int) Math.ceil(screenConverter.getStartY());
+        int downRealBound = (int) (screenConverter.getStartY() - screenConverter.getRealHeight());
+
+        if (screenConverter.getStartX() < 0 && screenConverter.getStartX() < screenConverter.getScreenWidth()) {
+            for (int i = downRealBound; i <= upRealBound; i++) {
+                new Line(new RealPoint(-0.05, i), new RealPoint(0.05, i)).draw(graphics2D, screenConverter);
+            }
+        }
     }
 
     public void addDrawingObject(Drawing drawing) {
