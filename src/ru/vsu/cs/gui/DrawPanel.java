@@ -139,10 +139,24 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         int leftRealBound = (int) screenConverter.getStartX();
         int rightRealBound = (int) Math.ceil(screenConverter.getStartX() + screenConverter.getRealWidth());
 
-        if (screenConverter.getStartY() > 0 && screenConverter.getStartY() < screenConverter.getRealHeight()) {
-            for (int i = leftRealBound; i <= rightRealBound; i++) {
-                new Line(new RealPoint(i, -0.05), new RealPoint(i, 0.05)).draw(graphics2D, screenConverter);
+        double firstLinePointY;
+        double secondLinePointY;
+        if (screenConverter.getStartY() > 0) {
+            if (screenConverter.getStartY() < screenConverter.getRealHeight()) {
+                firstLinePointY = -0.05;
+                secondLinePointY = 0.05;
             }
+            else {
+                firstLinePointY = screenConverter.getStartY() - screenConverter.getRealHeight();
+                secondLinePointY = screenConverter.getStartY() - screenConverter.getRealHeight() + 0.2;
+            }
+        }
+        else {
+            firstLinePointY = screenConverter.getStartY();
+            secondLinePointY = screenConverter.getStartY() - 0.2;
+        }
+        for (int i = leftRealBound; i <= rightRealBound; i++) {
+            new Line(new RealPoint(i, firstLinePointY), new RealPoint(i, secondLinePointY)).draw(graphics2D, screenConverter);
         }
     }
 
@@ -150,10 +164,27 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         int upRealBound = (int) Math.ceil(screenConverter.getStartY());
         int downRealBound = (int) (screenConverter.getStartY() - screenConverter.getRealHeight());
 
-        if (screenConverter.getStartX() < 0 && screenConverter.getStartX() < screenConverter.getScreenWidth()) {
-            for (int i = downRealBound; i <= upRealBound; i++) {
-                new Line(new RealPoint(-0.05, i), new RealPoint(0.05, i)).draw(graphics2D, screenConverter);
+        double firstLinePointX;
+        double secondLinePointX;
+         System.out.println(screenConverter.getStartX() + " | " + screenConverter.getRealWidth());
+
+        if (screenConverter.getStartX() < 0) {
+            if (screenConverter.getStartX() > -screenConverter.getRealWidth()) {
+                firstLinePointX = -0.05;
+                secondLinePointX = 0.05;
             }
+            else {
+                firstLinePointX = screenConverter.getStartX() + screenConverter.getRealWidth();
+                secondLinePointX = screenConverter.getStartX() + screenConverter.getRealWidth() - 0.1;
+            }
+        }
+        else {
+            firstLinePointX = screenConverter.getStartX();
+            secondLinePointX = screenConverter.getStartX() + 0.1;
+        }
+
+        for (int i = downRealBound; i <= upRealBound; i++) {
+            new Line(new RealPoint(firstLinePointX, i), new RealPoint(secondLinePointX, i)).draw(graphics2D, screenConverter);
         }
     }
 
