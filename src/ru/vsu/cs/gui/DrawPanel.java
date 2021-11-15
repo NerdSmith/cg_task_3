@@ -116,7 +116,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-
+        RealPoint realX = screenConverter.convertScreenToReal(new ScreenPoint(mouseEvent.getX(), mouseEvent.getY()));
+        System.out.print("\r" + realX.getX() + " | " + realX.getY());
     }
 
     private static final double SCALE_STEP = 0.01;

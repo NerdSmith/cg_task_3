@@ -20,7 +20,7 @@ public class Graph implements Drawing {
     public Graph(String strFunction) throws Exception {
         this.expressionTree = new ExpressionTree(strFunction);
     }
-    //TODO delete line in 1/x
+
     public ArrayList<RealPoint> computeRealCoordinates(double leftRealBound, double rightRealBound) {
         Map<Character, Double> vars = new HashMap<>();
         ArrayList<RealPoint> realCoordinates = new ArrayList<>();
