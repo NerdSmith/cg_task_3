@@ -19,13 +19,14 @@ public class OperatorAction {
 
     public static Double performAnAction(String operator, Double firstOperand, Double secondOperand) {
         double computeRes = actions.get(operator).compute(firstOperand, secondOperand);
-        double res;
-        if (Double.isFinite(computeRes)) {
-            res = Math.round(computeRes * ACCURACY) / ACCURACY;
-        }
-        else {
-            res = computeRes;
-        }
-        return res;
+//        double res;
+//        if (Double.isFinite(computeRes)) {
+//            res = Math.round(computeRes * ACCURACY) / ACCURACY;
+//        }
+//        else {
+//            res = computeRes;
+//        }
+//        return res;
+        return computeRes;
     }
 }

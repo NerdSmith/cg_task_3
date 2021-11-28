@@ -59,7 +59,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         });
 
         DrawUtils.drawWithColor(graphics2D, Color.BLUE, () -> {
-            drawAxisScale(graphics2D);
+            //drawAxisScale(graphics2D);
         });
 
 

@@ -140,9 +140,9 @@ public class ExpressionTree {
     }
 
     public static void main(String[] args) throws Exception {
-        String s = "1/(x+1/3)";
+        String s = "2$0";
         ExpressionTree n = new ExpressionTree(s);
-        System.out.println(n.compute(Map.of('x', -33.0/100)));
+        System.out.println(n.compute());
 
         // System.out.println(Double.isFinite(n.compute()));
 

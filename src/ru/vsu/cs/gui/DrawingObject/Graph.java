@@ -21,25 +21,27 @@ public class Graph implements Drawing {
         this.expressionTree = new ExpressionTree(strFunction);
     }
 
-    public ArrayList<RealPoint> computeRealCoordinates(double leftRealBound, double rightRealBound) {
+    public ArrayList<RealPoint> computeRealCoordinates(double leftRealBound, double rightRealBound, int n) {
         Map<Character, Double> vars = new HashMap<>();
         ArrayList<RealPoint> realCoordinates = new ArrayList<>();
 
         double multipliedLeftBound = leftRealBound * ACCURACY_MULTIPLIER;
         double multipliedRightBound = rightRealBound * ACCURACY_MULTIPLIER;
+        double step = (rightRealBound - leftRealBound) / (n - 1);
         for (
-                double currMultipliedVal = multipliedLeftBound;
-                currMultipliedVal < multipliedRightBound;
-                currMultipliedVal += STEP_DELTA
+                int i = 0; i < n; i++
         ) {
-            double currRealVal = currMultipliedVal / ACCURACY_MULTIPLIER;
+            //double currRealVal = currMultipliedVal / ACCURACY_MULTIPLIER;
+            double currRealVal = leftRealBound + i * step;
 
-            if (Math.abs(currRealVal % 1) < EPSILON) {
-                vars.put('x', (double) ((int) currRealVal));
-            }
-            else {
-                vars.put('x', currRealVal);
-            }
+//            if (Math.abs(currRealVal % 1) < EPSILON) {
+//                vars.put('x', (double) ((int) currRealVal));
+//            }
+//            else {
+//                vars.put('x', currRealVal);
+//            }
+
+            vars.put('x', currRealVal);
 
             double expressionResult;
             try {
@@ -63,7 +65,7 @@ public class Graph implements Drawing {
     public void draw(Graphics2D graphics2D, ScreenConverter screenConverter) {
         double leftRealBound = screenConverter.getStartX();
         double rightRealBound = leftRealBound + screenConverter.getRealWidth();
-        ArrayList<RealPoint> realCoordinates = computeRealCoordinates(leftRealBound, rightRealBound);
+        ArrayList<RealPoint> realCoordinates = computeRealCoordinates(leftRealBound, rightRealBound, screenConverter.getScreenWidth() * 2);
 
         RealPoint currCoordinate = realCoordinates.get(0);
         for (int i = 1; i < realCoordinates.size(); i++) {
@@ -81,7 +83,8 @@ public class Graph implements Drawing {
     }
 
     public static void main(String[] args) throws Exception {
-        Graph g = new Graph("x*2-1");
+        Graph g = new Graph("2$0");
+        System.out.println();
         // g.getLines();
         System.out.println('a');
     }
